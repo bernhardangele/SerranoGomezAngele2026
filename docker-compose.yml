@@ -1,1 +1,11 @@
-.git/annex/objects/zq/2Q/MD5E-s291--e9571e73a77edc65cc1af280ae798806.yml/MD5E-s291--e9571e73a77edc65cc1af280ae798806.yml
+services:
+  analysis:
+    image: bangele1/analysis-in-a-box-rocker:SerranoGomezAngele2026
+    ports:
+      - "8787:8787"
+    volumes:
+      - .:/home/rstudio/project
+    working_dir: /home/rstudio/project
+    environment:
+      - PASSWORD=rstudio
+      - CMDSTAN=/opt/cmdstan/cmdstan-2.38.0
