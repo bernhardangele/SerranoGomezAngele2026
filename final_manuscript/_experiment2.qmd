@@ -1,0 +1,659 @@
+---
+bibliography: [references-manuscript.bib, r-references.bib]
+---
+
+# Experiment 2: Lexical decision task
+
+In Experiment 2, participants were shown target stimuli that could either be words or pseudowords and were flanked by articles either agreed (were concordant) or disagreed (were discordant) with the gender of the central word or the apparent grammatical gender of the matched pseudoword. Our predictions for the outcome of this experiment were as follows: (1) Compared to Experiment 1, the lexical decision task does not require participants to process the grammatical gender of the target explicitly, as it is irrelevant for the decision of whether the target stimulus is a word or not. However, if the flanker articles are processed obligatorily and at the same time as the central stimulus, the error signal from the mismatch between discordant article and noun may interfere with the decision of whether the target stimulus is a word, delaying the decision or even resulting in an incorrect rejection of a word stimulus. As the pseudowords were matched with the words to have the same apparent gender as the matched target word (e.g. *cosa* was matched with *poga* and *pelo* was matched with *meno*), every pseudoword had an apparent gender. A pseudoword presented with a "concordant" flanker may be harder to reject than a pseudoword presented with a flanker that does not agree with its apparent gender. (2) As in Experiment 1, we may observe a systematic difference between processing grammatically masculine and grammatically feminine words. If this is the case, we expected to observe this in reaction time or accuracy or both. (3) Finally, and again as in Experiment 1, if the grammatical gender of the target word influences how participants process the flankers, we expected that we would observe an interaction between target word gender and flanker effect.
+
+## Method
+
+We report here how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the two experiments. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) --> The experiment was preregistered; the preregistration form can be found at <https://osf.io/wt2qg/?view_only=d39d63d23f674e2ab47e7d06f1c22b6d>. Data, experiment scripts, and stimuli can be found at <https://osf.io/nsu4p/?view_only=c5f86ce479cf4866b6c30523f375219c>.
+
+### Rationale for sample size and stopping rule
+
+In Experiment 2, our design had a total of 480 items (240 words and 240 pseudowords) and eight conditions (concordant vs. discordant flankers X masculine vs. feminine (apparent) gender X word vs. pseudoword). This means that every participant contributed 60 observations per condition. Using the rule of thumb established by @brysbaert2019, this means that 27 participants would theoretically be sufficient to reach the 1,600 observations. In Experiment 1, we observed a clear effect of the flanker manipulation, and, in an exploratory analysis on the Experiment 1 data, found that we could detect the main effect of flanker condition conclusively even at 20 participants (corresponding to 1,500 observations per condition). Therefore, if the effect in the lexical decision task has the same size as in the gender categorization task, 1,600 observations should be sufficient. Out of an abundance of caution, we instead opted for 3,000 observations (50 participants). Additionally, we performed a (frequentist) power simulation using SimR with the data from the first experiment and assuming a much smaller effect size (10 ms instead of 52 ms), which showed that, with 50 participants, we could expect a power of .97. Even though the frequentist simulation is not an ideal predictor for the outcome of our Bayesian analyses, it provides a guideline for the number of participants that may be needed to detect an effect. We planned to collect data from slightly more than 50 participants to account for potential data loss and exclusions, e.g. due to low response accuracy and to ensure a balanced design.
+
+### Participants
+
+```{r}
+#| label: read-data-and-demographics-for-exp2
+#| echo: false
+#| message: false
+
+exp2_all_csv_content <- fs::dir_ls(path = here("data", "lexical_decision_flanker"), glob = "*.csv") %>%
+  map_dfr(read_csv, .id = "source", col_type = cols(
+    .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
+
+exp2_all_participants <- exp2_all_csv_content |>
+  # for each subject, set the first value of counterbalancing condition as the value for all of the data
+  # the key assignment is given by the image used in the instruction (3rd row of each data file) 
+  group_by(PROLIFIC_PID) |>
+  mutate(counterbalancing_condition = counterbalancing_condition[1],
+         response_key_condition = if_else(instruct_image[3] == "keyboardresponseFM.png", "FM", "MF")) |>
+  ungroup() |>
+  # remove rows that are not trials (e.g., instructions) and practice trials
+  filter(!is.na(TrialID) & TrialID < 2000) %>%
+  # fix some misleading variable names and add response key counterbalancing information (female left vs. male left)
+  mutate(Target = Prime, 
+         FlankerDuration = PrimeDuration) |>
+  select(source, PROLIFIC_PID, date, OS, frameRate, rt, corr, TrialID, StimulusType, Gender, Condition, FlankerDuration, Target, Flanker, response_key_condition, counterbalancing_condition)
+
+participant_list_exp2 <- exp2_all_participants |> group_by(PROLIFIC_PID, counterbalancing_condition, response_key_condition) |> summarise(
+  mean_rt = mean(rt, na.rm = TRUE),
+  mean_acc = mean(corr[corr != -1]),
+  mean_correct = mean(corr == 1),
+  time_out = sum(corr == -1),
+  N = n()
+  )
+
+low_acc_participants_exp2 <- participant_list_exp2 %>% filter(mean_correct < .8)
+
+
+
+exp2 <- exp2_all_participants %>% filter(!(PROLIFIC_PID %in% low_acc_participants_exp2$PROLIFIC_PID)) %>% 
+  filter(!(PROLIFIC_PID %in% exclude_for_inconsistent_information))
+
+n_exp2_correct_responses <- exp2 %>% filter(corr == 1) %>% nrow()
+
+n_exp2_correct_responses_short <- exp2 %>% filter(corr == 1 & rt < 0.25) %>% nrow()
+
+n_exp2_correct_responses_long <- exp2 %>% filter(corr == 1 & rt > 1.8) %>% nrow()
+
+n_exp2_timeout_responses <- exp2 %>% 
+  filter(corr == -1) %>% nrow()
+
+n_exp2_all_responses <- exp2 %>% 
+  filter(corr != -1) %>% nrow()
+
+n_exp2_all_responses_excluding_short_and_long <- exp2 %>% 
+  filter(!(rt < 0.25 | rt > 1.8) & corr != -1) %>% nrow()
+
+
+exp2$Condition <- factor(exp2$Condition, levels = c("AGR", "DIS"))
+
+exp2$Gender <- factor(exp2$Gender, levels = c("MAS", "FEM"))
+
+exp2$StimulusType <- factor(exp2$StimulusType, levels = c("WORD", "NOWORD"))
+
+demographics <- read_csv(here("analysis", "all_exp_demographics.csv"))
+
+demographics_summary_exp2 <- demographics %>%
+  filter(Experiment == "Exp2" & !(participant %in% low_acc_participants_exp2$PROLIFIC_PID)) %>%
+  summarise(n_total = n(),
+            mean_age = mean(age),
+            median_age = median(age),
+            min_age = min(age),
+            max_age = max(age),
+            n_male = sum(gender == "M"),
+            n_female = sum(gender == "F"),
+            n_nb = sum(!gender %in% c("M", "F")),
+            n_first_language_spanish = sum(first_language == "Spanish"),
+            n_first_language_spanish_english = sum(first_language %in% c("Spanish/English", "English/Spanish")),
+            n_first_language_spanish_other = sum(first_language == "Spanish/Other")
+            )
+
+
+```
+
+A total of `r nrow(participant_list_exp2) %>% apa_num()` participants were recruited through Prolific. On the Prolific platform, the experiment was only shown to participants who had indicated that they were over 18 years of age, that Spanish was their first language and that they had no diagnosis of a language-related disorder. Participants were paid \$2.50 (or the equivalent in their currency) for their participation, corresponding to \$10/hour given that the experiment lasted about 15 minutes on average. Out of all the participants, `r nrow(low_acc_participants_exp2) %>% as.integer %>% apa_num(numerals = FALSE)` were excluded from the analysis due to low accuracy (less than 80% correct responses). The final sample consisted of `r demographics_summary_exp2[1,"n_total"] %>% apa_num` participants (`r demographics_summary_exp2[1,"n_male"] %>% apa_num` male, `r demographics_summary_exp2[1,"n_female"] %>% apa_num` female, `r demographics_summary_exp2[1,"n_nb"] %>% apa_num` non-binary). The median age of the participants was `r demographics_summary_exp2[1,"median_age"] %>% apa_num(digits = 0)` years, with a minimum age of `r demographics_summary_exp2[1,"min_age"] %>% apa_num(digits = 0)` and a maximum age of `r demographics_summary_exp2[1,"max_age"] %>% apa_num(digits = 0)`. The majority of the participants stated that their first language was only Spanish (`r demographics_summary_exp2[1,"n_first_language_spanish"] %>% apa_num` participants), with `r demographics_summary_exp2[1,"n_first_language_spanish_english"] %>% apa_num` reporting both Spanish and English as their first languages and `r demographics_summary_exp2[1,"n_first_language_spanish_other"] %>% apa_num` reporting Spanish and another language as their first languages. All participants were naive to the purpose of the experiment and gave informed consent before the experiment.
+
+### Materials
+
+We used a total of 240 high-frequency Spanish target words (e.g., *mesa*) with four and five letters. Half of the target words were feminine and the other half were masculine. @tbl-exp2-material-descriptives shows the number of target words in each category and their word frequency as well as the OLD20 [@yarkoni2008]. For each target word, we created a matched pseudoword using the Wuggy pseudoword generator [@keuleers2010] with the Spanish word data base and default settings. We ensured that each pseudoword matched the corresponding word in terms of its word ending (which, for most words, is indicative of grammatical gender in Spanish). We included this "apparent gender" as a predictor in the analyses for the pseudoword trials (see below).
+
+```{r}
+#| label: tbl-exp2-material-descriptives
+#| echo: false
+#| message: false
+#| tbl-cap: "Descriptive statistics of the target words used in Experiment 2."
+#| after-caption-space: 0pt
+
+# read stimuli from excel file
+materials_exp2 <- readxl::read_xlsx(here("exp2_ldt_flanker", "trials_list0.xlsx"))
+
+materials_exp2_words <- filter(materials_exp2, StimulusType == "WORD")
+
+# write word list for EsPal if necessaryß
+# write.csv(materials_exp2_words$Prime , here("exp2_ldt_flanker", "exp2_words.txt"), row.names = FALSE, quote = FALSE)
+
+materials_exp2_freq <- read_delim(here("exp2_ldt_flanker", "espal_exp2_words.txt"), delim = "\t")
+
+# join frequency data with the materials
+
+materials_exp2_full <- materials_exp2_words %>%
+  left_join(materials_exp2_freq, by = c("Prime" = "word")) %>%
+  mutate(word = as.character(Prime),
+         word_gender = if_else(Gender == "MAS", "Masculine", "Feminine")) %>%
+  select(c(word, word_gender, Condition, frq,zipf, Lev_N, num_letters))
+
+materials_exp2_descriptives_table <- materials_exp2_full %>%
+  group_by(word_gender, num_letters) %>%
+  summarise(mean_zipf = mean(zipf),
+            sd_zipf = sd(zipf),
+            mean_old20 = mean(Lev_N),
+            sd_old20 = sd(Lev_N),
+            N = n())
+
+# print table as gt
+
+materials_exp2_descriptives_table %>%
+  gt(rowname_col = "num_letters") %>%
+#  tab_header(
+#    title = "Descriptive statistics of the target words used in Experiment 1") %>%
+  cols_label(
+    word_gender = "Grammatical Gender",
+    num_letters = "Number of Letters",
+    mean_zipf = "Mean",
+    sd_zipf = "SD",
+    mean_old20 = "Mean",
+    sd_old20 = "SD",
+    N = "N") %>%
+  fmt_number(
+    columns = c(mean_zipf, sd_zipf, mean_old20, sd_old20),
+    decimals = 2) %>%
+  fmt_number(
+    columns = c(N),
+    decimals = 0
+      ) %>%
+  fmt_number(
+    columns = c(num_letters),
+    decimals = 0,
+    pattern = "{x} letters"
+  ) %>%
+  tab_spanner(
+    label = "Zipf",
+    columns = c(mean_zipf, sd_zipf))  %>%
+  tab_spanner(
+    label = "OLD20",
+    columns = c(mean_old20, sd_old20))  %>%
+    tab_spanner(
+    label = "Target Word",
+    columns = c(N, mean_zipf, sd_zipf, mean_old20, sd_old20, num_letters))  %>%
+  tab_source_note(
+    source_note = html("Note: Word frequency is given in Zipf (\\(\\log_{10}(\\text{fpmw}) +  3 \\), where fpmw is the frequency per million words). OLD20 is the mean Levenshtein distance between the target word and the 20 nearest neighbors in the lexicon.")) 
+
+#    source_note = md("Note: Word frequency in Zipf ($ Z = \\log_{10}(\\text{fpmw}) + 3 $, #where fpmw is the frequency per million words.)"))
+
+```
+
+### Apparatus
+
+The apparatus was identical to Experiment 1.
+
+### Procedure
+
+The procedure was identical to Experiment 1, except that participants performed a lexical decision instead of a grammatical gender categorization. They responded by using either the "A" and "L" keys on the physical keyboard of their devices. As in Experiment 1, the assignment of these keys was counterbalanced such that half of the participants received one assignment (A = word and L = nonword) and the other half of participants received the other (A = nonword and L = word). In Experiment 2, we only included the concordant and discordant flanker conditions, as the results in the no-flanker control condition were very similar to those in the concordant flanker condition in Experiment 1.
+
+### Data analysis and dependent variables
+
+As in Experiment 1, we analyzed the data by fitting Bayesian linear mixed models including the flanker condition (concordant vs. discordant) as well as the grammatical gender of the target word or the apparent gender of the pseudoword (feminine vs. masculine) and their interaction as categorical fixed effects. We fitted separate models for words and pseudoword stimuli. We used a sum contrast for the flanker condition, with the discordant flanker condition represented as -1 and the concordant flanker condition represented as 1. For the grammatical gender, we again used a sum contrast comparing the feminine (-1) to the masculine grammatical gender (1). The rest of the model specifications were identical to those used in Experiment 1, including the random effects structure. All models converged successfully (all $\hat{R}$s = 1.00). We report the results as in Experiment 1.
+
+## Results
+
+```{r}
+#| label: load-exp2-model-results
+#| echo: false
+#| message: false
+#| warning: false
+#| cache: true
+
+# load the model results
+blmm_exp2_rt_dist <- qs_read(here("analysis", "blmm_exp2_rt_dist.qs"))
+blmm_exp2_acc <- qs_read(here("analysis", "blmm_acc_exp2.qs"))
+blmm_exp2_rt_dist_nonwords <- qs_read(here("analysis", "blmm_exp2_rt_dist_nonword.qs"))
+blmm_exp2_acc_nonwords <- qs_read(here("analysis", "blmm_exp2_acc_nonword.qs"))
+```
+
+As in Experiment 1, accuracy after excluding the low-accuracy participants (see above) was very high, with `r (n_exp2_correct_responses/n_exp2_all_responses * 100) %>% apa_num`% correct responses out of `r n_exp2_all_responses %>% apa_num` total responses (for an average of `r (n_exp2_correct_responses/8) %>% apa_num` included observations per condition). The mean response time for correct answers was `r exp2 %>% filter(corr == 1 & rt > .25 & rt < 1.8) %>% .$rt %>% mean() %>% apa_num` seconds. The mean response time for incorrect answers was `r exp2 %>% filter(corr == 0 & rt > .25 & rt < 1.8) %>% .$rt %>% mean() %>% apa_num`.
+
+@tbl-exp2-means-words summarizes the means and standard deviations of the correct response times by flanker condition and grammatical gender of target words, as well as the number of observations in each condition, while @tbl-exp2-means-nonwords shows the same for the pseudoword trials.
+
+```{r}
+#| label: tbl-exp2-means-words
+#| echo: false
+#| message: false
+#| after-caption-space: 0pt
+#| tbl-cap: Accuracy as well as means and standard deviations of correct response times (in s) by flanker condition and grammatical gender of words in Experiment 2.
+
+
+# Calculate proportion correct separately, excluding corr == -1
+exp2_percent_correct_words <- exp2 %>% filter(StimulusType == "WORD") %>%
+  filter(rt > .25 & rt < 1.8) %>% # Apply the same RT filter as for means for consistency in trial count basis
+  group_by(Gender, Condition) %>%
+  summarise(
+    n_trials = n(),
+    n_correct = sum(corr == 1),
+    percent_correct = n_correct / n_trials * 100
+  ) %>%
+  ungroup()
+
+# Calculate means and standard deviations for correct RTs
+exp2_means_table_words <- exp2 %>%  filter(StimulusType == "WORD") %>%
+  filter(corr == 1 & rt > .25 & rt < 1.8) %>%
+  group_by(Gender, Condition) %>%
+  summarise(
+    mean_rt = mean(rt),
+    sd_rt = sd(rt),
+    N = n() # N here is the number of correct trials within the RT filter
+  ) %>%
+  ungroup() 
+
+# Join the proportion correct data with the means table
+exp2_means_table_words <- exp2_means_table_words %>%
+  left_join(exp2_percent_correct_words, by = c("Gender", "Condition")) %>%
+   mutate(Condition = recode(Condition,
+                             "CON" = "Control",
+                             "AGR" = "Concordant",
+                             "DIS" = "Discordant"),
+                     Gender = recode(Gender,
+                                     "MAS" = "Masculine",
+                                     "FEM" = "Feminine")) %>%
+  select(Condition, Gender, percent_correct, N, mean_rt, sd_rt)
+
+
+# use gt to make a table
+
+gt_exp2_means_table_words <- exp2_means_table_words %>%
+  gt(rowname_col = "Gender") %>%
+  cols_label(
+    Gender = "Grammatical Gender",
+    Condition = "Flanker Condition",
+    N = "N",
+    percent_correct = "% correct", # Keep this label, it will appear under the spanner
+    mean_rt = "Mean RT",
+    sd_rt = "SD"
+  ) %>%
+  tab_spanner( # Add spanner column for Accuracy
+    label = "Accuracy",
+    columns = percent_correct
+  ) %>%
+  tab_spanner( # Add spanner column for RT
+    label = "Correct responses",
+    columns = c(N, mean_rt, sd_rt)
+  ) %>%
+  fmt_number(
+    columns = c(mean_rt, sd_rt),
+    decimals = 3
+  ) %>%
+  fmt_number(
+    columns = percent_correct,
+    decimals = 1
+  ) %>%
+  tab_stubhead(label = "Grammatical Gender") %>%
+  tab_source_note(source_note = md("Note: *N* = number of correct responses; RT = response time (in s); SD = standard deviation (across all trials)"))
+
+# Calculate proportion correct separately, excluding corr == -1
+exp2_percent_correct_nonwords <- exp2 %>% filter(StimulusType == "NOWORD") %>%
+  filter(rt > .25 & rt < 1.8) %>% # Apply the same RT filter as for means for consistency in trial count basis
+  group_by(Gender, Condition) %>%
+  summarise(
+    n_trials = n(),
+    n_correct = sum(corr == 1),
+    percent_correct = n_correct / n_trials * 100
+  ) %>%
+  ungroup()
+
+# Calculate means and standard deviations for correct RTs
+exp2_means_table_nonwords <- exp2 %>%  filter(StimulusType == "NOWORD") %>%
+  filter(corr == 1 & rt > .25 & rt < 1.8) %>%
+  group_by(Gender, Condition) %>%
+  summarise(
+    mean_rt = mean(rt),
+    sd_rt = sd(rt),
+    N = n() # N here is the number of correct trials within the RT filter
+  ) %>%
+  ungroup() 
+
+# Join the proportion correct data with the means table
+exp2_means_table_nonwords <- exp2_means_table_nonwords %>%
+  left_join(exp2_percent_correct_nonwords, by = c("Gender", "Condition")) %>%
+   mutate(Condition = recode(Condition,
+                             "CON" = "Control",
+                             "AGR" = "Concordant",
+                             "DIS" = "Discordant"),
+                     Gender = recode(Gender,
+                                     "MAS" = "Masculine",
+                                     "FEM" = "Feminine")) %>%
+  select(Condition, Gender, percent_correct, N, mean_rt, sd_rt)
+
+
+# use gt to make a table
+
+gt_exp2_means_table_nonwords <- exp2_means_table_nonwords %>%
+  gt(rowname_col = "Gender") %>%
+  cols_label(
+    Gender = "Grammatical Gender",
+    Condition = "Flanker Condition",
+    N = "N",
+    percent_correct = "% correct", # Keep this label, it will appear under the spanner
+    mean_rt = "Mean RT",
+    sd_rt = "SD"
+  ) %>%
+  tab_spanner( # Add spanner column for Accuracy
+    label = "Accuracy",
+    columns = percent_correct
+  ) %>%
+  tab_spanner( # Add spanner column for RT
+    label = "Correct responses",
+    columns = c(N, mean_rt, sd_rt)
+  ) %>%
+  fmt_number(
+    columns = c(mean_rt, sd_rt),
+    decimals = 3
+  ) %>%
+  fmt_number(
+    columns = percent_correct,
+    decimals = 1
+  ) %>%
+  tab_stubhead(label = "Apparent Grammatical Gender") %>%
+  tab_source_note(source_note = md("Note: *N* = number of correct responses; RT = response time (in s); SD = standard deviation"))
+
+gt_exp2_means_table_words
+
+```
+
+```{r}
+#| label: tbl-exp2-means-nonwords
+#| echo: false
+#| message: false
+#| after-caption-space: 0pt
+#| tbl-cap: Accuracy as well as means and standard deviations of correct response times (in s) by flanker condition and apparent grammatical gender of **pseudowords** in Experiment 2.
+
+gt_exp2_means_table_nonwords
+```
+
+@tbl-exp2-brms-rt-model-words shows the results of the Bayesian linear mixed model for response time, while @tbl-exp2-brms-acc-model-words shows the results of the Bayesian generalized linear mixed model for accuracy. @tbl-exp2-brms-rt-model-nonwords and @tbl-exp2-brms-acc-model-nonwords show the same for response time and accuracy in pseudoword trials, respectively.
+
+```{r}
+#| label: tbl-exp2-brms-rt-model-words
+#| echo: false
+#| message: false
+#| cache: true
+#| tbl-cap: "Coefficients and 95% credible intervals from a Bayesian linear mixed model fitted to correct reaction times on *word* trials in Experiment 2, with flanker condition, target word grammatical gender, and their interaction as predictors for both the $\\mu$ and the $\\beta$ parameters of the ex-Gaussian distribution. Coefficients for which the 95% credible interval does not include 0 are shown in bold."
+#| after-caption-space: 0pt
+
+parameter_names <- c(
+    "Intercept",
+    "Intercept",
+    "Concordant vs. Discordant Flanker",
+    "Grammatical Gender (Feminine vs. masculine)",
+    "Concordant vs. Discordant:Grammatical Gender",
+    "Concordant vs. Discordant Flanker",
+    "Grammatical Gender (Feminine vs. masculine)",
+    "Concordant vs. Discordant:Grammatical Gender)"
+    )
+
+blmm_exp2_rt_dist_summary <- cbind(parameter_names, summary(blmm_exp2_rt_dist)$fixed %>% select(-Rhat, -ends_with("_ESS")))
+
+colnames(blmm_exp2_rt_dist_summary) <- c("parameter", "estimate", "SE","lower","upper")
+
+# makes a vector 
+beta_or_not <- if_else(rownames(blmm_exp2_rt_dist_summary) %>% startsWith("beta_"), true = "beta", "mu")
+
+gt(blmm_exp2_rt_dist_summary, rowname_col = "parameter") %>%
+  tab_row_group(id = "mu", label = md("Parameter: $\\mu$"), rows = which(beta_or_not == "mu")) %>%
+  tab_row_group(id = "beta", label = md("Parameter: $\\beta$"), rows = which(beta_or_not == "beta")) %>%
+  row_group_order(c("mu", "beta")) %>%
+  cols_label(
+    parameter = "Parameter",
+    estimate = "b",
+    SE = "SE",
+    lower = "2.5%",
+    upper = "97.5%"
+  ) %>%
+  tab_spanner(
+    label = "Estimate",
+    columns = c(estimate, SE)
+  ) %>%
+  tab_spanner(
+    label = "Credible Interval (b)",
+    columns = c(lower, upper)
+  ) %>%
+  fmt_number(
+    columns = c(estimate, SE, lower, upper),
+    decimals = 3
+  ) %>% tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(estimate, SE, lower, upper),
+      rows = ((lower > 0 & upper > 0) | (lower < 0 & upper < 0 ))
+    )) %>%
+  tab_source_note(source_note = md("Note: *b* = coefficient estimate; *SE* = standard error; *2.5%* and *97.5%* = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in **bold**."))
+      
+
+```
+
+```{r}
+#| label: tbl-exp2-brms-rt-model-nonwords
+#| echo: false
+#| message: false
+#| cache: true
+#| tbl-cap: "Coefficients and 95% credible intervals from a Bayesian linear mixed model fitted to correct reaction times on _pseudoword_ trials in Experiment 2, with flanker condition, pseudoword apparent grammatical gender, and their interaction as predictors for both the $\\mu$ and the $\\beta$ parameters of the ex-Gaussian distribution. Coefficients for which the 95% credible interval does not include 0 are shown in bold."
+#| after-caption-space: 0pt
+
+parameter_names <- c(
+    "Intercept",
+    "Intercept",
+    "Concordant vs. Discordant Flanker",
+    "Apparent Grammatical Gender (F vs. M)",
+    "Concordant vs. Discordant:Apparent Grammatical Gender",
+    "Concordant vs. Discordant Flanker",
+    "Apparent Grammatical Gender (F vs. M)",
+    "Concordant vs. Discordant:Apparent Grammatical Gender"
+    )
+
+blmm_exp2_rt_dist_nonwords_summary <- cbind(parameter_names, summary(blmm_exp2_rt_dist_nonwords)$fixed %>% select(-Rhat, -ends_with("_ESS")))
+
+colnames(blmm_exp2_rt_dist_nonwords_summary) <- c("parameter", "estimate", "SE","lower","upper")
+
+# makes a vector 
+beta_or_not <- if_else(rownames(blmm_exp2_rt_dist_nonwords_summary) %>% startsWith("beta_"), true = "beta", "mu")
+
+gt(blmm_exp2_rt_dist_nonwords_summary, rowname_col = "parameter") %>%
+  tab_row_group(id = "mu", label = md("Parameter: $\\mu$"), rows = which(beta_or_not == "mu")) %>%
+  tab_row_group(id = "beta", label = md("Parameter: $\\beta$"), rows = which(beta_or_not == "beta")) %>%
+  row_group_order(c("mu", "beta")) %>%
+  cols_label(
+    parameter = "Parameter",
+    estimate = "b",
+    SE = "SE",
+    lower = "2.5%",
+    upper = "97.5%"
+  ) %>%
+  tab_spanner(
+    label = "Estimate",
+    columns = c(estimate, SE)
+  ) %>%
+  tab_spanner(
+    label = "Credible Interval (b)",
+    columns = c(lower, upper)
+  ) %>%
+  fmt_number(
+    columns = c(estimate, SE, lower, upper),
+    decimals = 3
+  ) %>% tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(estimate, SE, lower, upper),
+      rows = ((lower > 0 & upper > 0) | (lower < 0 & upper < 0 ))
+    )) %>%
+  tab_source_note(source_note = md("Note: *b* = coefficient estimate; *SE* = standard error; *2.5%* and *97.5%* = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in **bold**."))
+      
+
+```
+
+### Effects of the flanker condition
+
+```{r}
+#| label: calculate-exp2-effects
+#| cache: true
+#| include: false
+
+# pre-generate all strings we need to report the experiment so we can cache this operation 
+
+
+# --- Experiment 2: Response Time Model for Words (blmm_exp2_rt_dist) ---
+
+# Mu parameters (Location)
+exp2_eff_rt_mu_agr_vs_dis <- blmm_exp2_rt_dist %>% brms_effect_summary("Condition1")
+exp2_eff_rt_mu_gender <- blmm_exp2_rt_dist %>% brms_effect_summary("Gender1")
+exp2_eff_rt_mu_agr_vs_dis_by_gender <- blmm_exp2_rt_dist %>% brms_effect_summary("Condition1:Gender1")
+
+
+# Beta parameters (Scale/Tail)
+exp2_eff_rt_beta_agr_vs_dis <- blmm_exp2_rt_dist %>% brms_effect_summary("beta_Condition1")
+exp2_eff_rt_beta_gender <- blmm_exp2_rt_dist %>% brms_effect_summary("beta_Gender1")
+exp2_eff_rt_beta_agr_vs_dis_by_gender <- blmm_exp2_rt_dist %>% brms_effect_summary("beta_Condition1:Gender1")
+
+
+# --- Experiment 2: Accuracy Model for Words (blmm_exp2_acc) ---
+
+exp2_eff_acc_agr_vs_dis <- blmm_exp2_acc %>% brms_effect_summary("Condition1")
+exp2_eff_acc_gender <- blmm_exp2_acc %>% brms_effect_summary("Gender1")
+exp2_eff_acc_agr_vs_dis_by_gender <- blmm_exp2_acc %>% brms_effect_summary("Condition1:Gender1")
+
+# --- Experiment 2: Response Time Model for Nonwords (blmm_exp2_rt_dist_nonword) ---
+# Mu parameters (Location)
+exp2_eff_rt_mu_agr_vs_dis_nonword <- blmm_exp2_rt_dist_nonwords %>% brms_effect_summary("Condition1")
+exp2_eff_rt_mu_gender_nonword <- blmm_exp2_rt_dist_nonwords %>% brms_effect_summary("Gender1")
+exp2_eff_rt_mu_agr_vs_dis_by_gender_nonword <- blmm_exp2_rt_dist_nonwords %>% brms_effect_summary("Condition1:Gender1")
+
+# Beta parameters (Scale/Tail)
+exp2_eff_rt_beta_agr_vs_dis_nonword <- blmm_exp2_rt_dist_nonwords %>% brms_effect_summary("beta_Condition1")
+exp2_eff_rt_beta_gender_nonword <- blmm_exp2_rt_dist_nonwords %>% brms_effect_summary("beta_Gender1")
+exp2_eff_rt_beta_agr_vs_dis_by_gender_nonword <- blmm_exp2_rt_dist_nonwords %>% brms_effect_summary("beta_Condition1:Gender1")
+
+# --- Experiment 2: Accuracy Model for Nonwords (blmm_exp2_acc) ---
+
+exp2_eff_acc_agr_vs_dis_nonword <- blmm_exp2_acc_nonwords %>% brms_effect_summary("Condition1")
+exp2_eff_acc_gender_nonword <- blmm_exp2_acc_nonwords %>% brms_effect_summary("Gender1")
+exp2_eff_acc_agr_vs_dis_by_gender_nonword <- blmm_exp2_acc_nonwords %>% brms_effect_summary("Condition1:Gender1")
+
+
+```
+
+On word trials, we observed an effect of the discordant flanker condition compared to the concordant flanker in the mean of the Gaussian component of response time, $\mu_{RT}$ (`r exp2_eff_rt_mu_agr_vs_dis`), indicating longer response times in the discordant condition, and a slightly larger effect in the scale component, $\beta_{RT}$ (`r exp2_eff_rt_beta_agr_vs_dis`), indicating some evidence for a longer right tail of the response time distribution. There was little evidence for effects of any of the manipulations on accuracy for word trials in Experiment 2 (`r exp2_eff_acc_agr_vs_dis`).
+
+On pseudoword trials, we observed the same pattern of effects as for words, but in the opposite direction, with shorter response times in the discordant flanker condition compared to the concordant flanker condition ($\mu_{RT}$: `r exp2_eff_rt_mu_agr_vs_dis_nonword`; $\beta_{RT}$: `r exp2_eff_rt_beta_agr_vs_dis_nonword`), indicating that it was slightly easier to correctly reject a pseudoword when it was presented together with the incorrect articles for its apparent gender. As for word trials, little evidence that the flanker condition affected accuracy for pseudoword trials in Experiment 2 (`r exp2_eff_acc_agr_vs_dis_nonword`).
+
+```{r}
+#| label: tbl-exp2-brms-acc-model-words
+#| echo: false
+#| message: false
+#| cache: true
+#| tbl-cap: "Coefficients and 95% credible intervals from a Bayesian generalized linear mixed model using the Bernoulli distribution to predict response accuracy in Experiment 2, with target word grammatical gender, and their interaction as predictors. Coefficients for which the 95% credible interval does not include 0 are shown in bold."
+#| after-caption-space: 0pt
+
+
+parameter_names <- c(
+    "Intercept",
+    "Concordant vs. Discordant Flanker",
+    "Grammatical Gender (Feminine vs. masculine)",
+    "Concordant vs. Discordant:Grammatical Gender"
+    )
+
+blmm_exp2_acc_summary <- cbind(parameter_names, summary(blmm_exp2_acc)$fixed %>% select(-Rhat, -ends_with("_ESS"))) 
+
+colnames(blmm_exp2_acc_summary) <- c("parameter", "estimate", "SE","lower","upper")
+
+gt(blmm_exp2_acc_summary, rowname_col = "parameter") %>%
+  tab_row_group(id = "theta", label = md("Parameter: $\\theta$"), rows = everything()) %>%
+  row_group_order(c("theta")) %>%
+  cols_label(
+    parameter = "Parameter",
+    estimate = "b",
+    SE = "SE",
+    lower = "2.5%",
+    upper = "97.5%"
+  ) %>%
+  tab_spanner(
+    label = "Estimate",
+    columns = c(estimate, SE)
+  ) %>%
+  tab_spanner(
+    label = "Credible Interval (b)",
+    columns = c(lower, upper)
+  ) %>%
+  fmt_number(
+    columns = c(estimate, SE, lower, upper),
+    decimals = 3
+  ) %>% tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(estimate, SE, lower, upper),
+      rows = ((lower > 0 & upper > 0) | (lower < 0 & upper < 0 ))
+    )) %>%
+  tab_source_note(source_note = md("Note: $\\theta = \\log\\left(\\frac{p}{1-p}\\right)$, where *p* is the probability of a correct response; *b* = coefficient estimate, *SE* = standard error, *2.5%* and *97.5%* = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in **bold**."))
+      
+
+```
+
+```{r}
+#| label: tbl-exp2-brms-acc-model-nonwords
+#| echo: false
+#| message: false
+#| cache: true
+#| tbl-cap: "Coefficients and 95% credible intervals from a Bayesian generalized linear mixed model using the Bernoulli distribution to predict response accuracy for pseudowords in Experiment 2, with flanker condition, apparent pseudoword word grammatical gender, and their interaction as predictors. Coefficients for which the 95% credible interval does not include 0 are shown in bold."
+#| after-caption-space: 0pt
+
+
+parameter_names <- c(
+    "Intercept",
+    "Concordant vs. Discordant Flanker",
+    "Apparent grammatical Gender (F vs. M)",
+    "Concordant vs. Discordant:Apparent grammatical Gender"
+    )
+
+blmm_exp2_acc_nonwords_summary <- cbind(parameter_names, summary(blmm_exp2_acc_nonwords)$fixed %>% select(-Rhat, -ends_with("_ESS"))) 
+
+colnames(blmm_exp2_acc_nonwords_summary) <- c("parameter", "estimate", "SE","lower","upper")
+
+gt(blmm_exp2_acc_nonwords_summary, rowname_col = "parameter") %>%
+  tab_row_group(id = "theta", label = md("Parameter: $\\theta$"), rows = everything()) %>%
+  row_group_order(c("theta")) %>%
+  cols_label(
+    parameter = "Parameter",
+    estimate = "b",
+    SE = "SE",
+    lower = "2.5%",
+    upper = "97.5%"
+  ) %>%
+  tab_spanner(
+    label = "Estimate",
+    columns = c(estimate, SE)
+  ) %>%
+  tab_spanner(
+    label = "Credible Interval (b)",
+    columns = c(lower, upper)
+  ) %>%
+  fmt_number(
+    columns = c(estimate, SE, lower, upper),
+    decimals = 3
+  ) %>% tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(estimate, SE, lower, upper),
+      rows = ((lower > 0 & upper > 0) | (lower < 0 & upper < 0 ))
+    )) %>%
+  tab_source_note(source_note = md("Note: $\\theta = \\log\\left(\\frac{p}{1-p}\\right)$, where *p* is the probability of a correct response; *b* = coefficient estimate, *SE* = standard error, *2.5%* and *97.5%* = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in **bold**."))
+
+```
+
+### Effects of grammatical gender
+
+For word trials in Experiment 2, there was little evidence for a marginal effect of grammatical gender across flanker conditions in either response times ($\mu_{RT}$: `r exp2_eff_rt_mu_gender`; $\beta_{RT}$: `r exp2_eff_rt_beta_gender`) or accuracy (`r exp2_eff_acc_gender`).
+
+The same was true for response times in pseudoword trials ($\mu_{RT}$: `r exp2_eff_rt_mu_gender_nonword`; $\beta_{RT}$: `r exp2_eff_rt_beta_gender_nonword`). However, there was an effect of the apparent gender of the pseudoword on accuracy, with apparent feminine pseudowords being slightly harder to correctly reject than apparent masculine pseudowords over all (`r exp2_eff_acc_gender_nonword`).
+
+### Interaction between flanker condition and grammatical gender
+
+We did not observe meaningful interactions between grammatical gender of the target word and the flanker condition in response time or accuracy for either words ($\mu_{RT}$: `r exp2_eff_rt_mu_agr_vs_dis_by_gender`; $\beta_{RT}$: `r exp2_eff_rt_beta_agr_vs_dis_by_gender`; $\theta_{accuracy}$: `r exp2_eff_acc_agr_vs_dis_by_gender`) or pseudowords ($\mu_{RT}$: `r exp2_eff_rt_mu_agr_vs_dis_by_gender_nonword`; $\beta_{RT}$: `r exp2_eff_rt_beta_agr_vs_dis_by_gender_nonword`; $\theta_{accuracy}$: `r exp2_eff_acc_agr_vs_dis_by_gender_nonword`).
+
+## Discussion
+
+In Experiment 2, we found that the article flankers affected processing of both words and pseudowords in a lexical decision task. For words, having a discordant flanker increased response times, while the opposite was true for pseudowords. Unlike in Experiment 1, where the flanker contained information favoring one response and disfavoring the other response, the flankers in Experiment 2, on their own, do not favor either response. These results cannot be explained by Eriksen and Eriksen's [-@eriksen1974] original assumption of a conflict at the response selection stage. Rather, our findings suggest that participants use, at least to some degree, a type of "error signal" to perform the lexical decision task, and that the discordant articles increase this error signal, interfering with the correct acceptance of words and facilitating the correct rejection of pseudowords. In a drift diffusion model of the lexical decision task [@ratcliff2004], this might be modelled by the drift rate being more negative in the discordant condition compared to the concordant condition (favoring evidence accumulation towards a "pseudoword" decision and disfavoring evidence accumulation towards a "word" decision). Similarly, in @dufau2012's Leaky Competitive Accumulator model of the lexical decision task, the discordant flankers may result in a weaker lexical input to the "YES" ("word") decision node, resulting in slower and less frequent "word" and faster and more frequent "pseudoword" decisions. It is important to note that, compared to the large flanker effect we observed in Experiment 1, where grammatical gender needed to be identified explicitly as part of the task, the effect in Experiment 2 was much smaller, as predicted by @sá-leite2024. Unlike in Experiment 1, this effect was also only observed in response time and not in accuracy. There was no evidence for an overall difference between the processing of masculine and feminine words, but there was some evidence in favor of a bias in gender assignment, with apparent feminine pseudowords being harder to reject than apparent masculine pseudowords, regardless of the flanker condition. This is again in the opposite direction of what we would expect based on the hypothesis that masculine is the default gender in Spanish. In summary, Experiment 2 shows clear evidence of parafoveal processing of article flankers during the lexical decision task, with participants being unable to ignore the parafoveal article information even though it was irrelevant to the task. Just as for the results from Experiment 1, our findings in Experiment 2 are compatible with the assumption that articles and nouns are processed jointly, but it is clear that the task plays a major role in determining the extent of this obligatory joint processing.

@@ -1,0 +1,244 @@
+---
+title: "Articles as flankers: The effect of grammatical gender depends on the task"
+# If blank, the running header is the title in upper case.
+shorttitle: "Articles as flankers"
+# Set names and affiliations.
+# It is nice to specify everyone's orcid, if possible.
+# There can be only one corresponding author, but declaring one is optional.
+author:
+  - name: Marina Serrano Carot
+    corresponding: true
+    email: mserranc@nebrija.es
+    orcid: 0009-0001-9706-2413
+    affiliations:
+     - ref: nebrija
+    roles:
+      - conceptualization
+      - methodology
+      - investigation
+      - software
+      - formal analysis
+      - writing
+  - name: Pablo Gomez
+    orcid: 0000-0003-4180-1560
+    affiliations:
+     - ref: skidmore
+     - ref: CSUSB
+    roles:
+      - conceptualization
+      - editing
+      - funding acquisition
+      - supervision
+  - name: Bernhard Angele
+    orcid: 0000-0001-8989-8555
+    email: bangele1@nebrija.es
+    affiliations:
+     - ref: nebrija
+    # Roles are optional. 
+    # Select from the CRediT: Contributor Roles Taxonomy https://credit.niso.org/
+    # conceptualization, data curation, formal Analysis, funding acquisition, investigation, 
+    # methodology, project administration, resources, software, supervision, validation, 
+    # visualization, writing, editing
+    roles:
+     - conceptualization
+     - methodology
+     - software
+     - validation
+     - writing
+     - supervision
+     - editing
+affiliations:
+  - id: nebrija
+    name: "Universidad Antonio de Nebrija"
+    group: Centro de Investigación Nebrija en Cognición (CINC)
+    department: Faculty of Education and Language
+    address: Calle de Asura, 90
+    city: Madrid
+    region: Community of Madrid
+    country: Spain
+    postal-code: 28043
+  - id: skidmore
+    name: "Skidmore College"
+    department: Department of Psychology
+    address: 815 North Broadway
+    city: Saratoga Springs
+    region: New York
+    country: United States
+    postal-code: 12866
+  - id: CSUSB
+    name: "California State University San Bernardino"
+    department: Palm Desert Campus
+    address: 37500 Cook St
+    city: Palm Desert
+    region: CA
+    country: United States
+    postal-code: 92211
+
+blank-lines-above-author-note: 2
+author-note:
+  status-changes: 
+    # Example: [Author name] is now at [affiliation].
+    affiliation-change: ~
+    # Example: [Author name] is deceased.
+    deceased: ~
+  # Disclosures condensed to one paragraph, but you can start a field with two line breaks to break them up: \n\nNew Paragraph
+  disclosures:
+    # Example: This study was registered at X (Identifier Y).
+    study-registration: ~
+    # Acknowledge and cite data/materials to be shared.
+    data-sharing: ~
+    # Example: This article is based on data published in [Reference].
+    # Example: This article is based on the dissertation completed by [citation].  
+    related-report: ~
+    # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
+    conflict-of-interest: The authors have no conflicts of interest to disclose.
+    # Example: This study was supported by Grant [Grant Number] from [Funding Source].
+    financial-support: This research has been supported by NSF Grant SMA-2127135 to PG, Grant 2022-T1/SOC-23980 from the Community of Madrid and, Grant PID2024-161331NB-I00 from the Spanish Ministry of Science and Innovation to BA. MSC was supported by Grant 2022-T1/SOC-23980.
+    # Example: The authors are grateful to [Person] for [Reason].
+    gratitude: ~
+    # Example. Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
+    authorship-agreements: ~
+abstract: "We report three experiments using a novel variation of the word flanker paradigm (Dare & Shillcock, 2013) to test whether readers process articles and nouns together, taking advantage of the fact that, in Spanish, there must be gender agreement between articles and nouns. In Experiment 1, we asked Spanish native speakers to make grammatical gender judgments about centrally presented Spanish nouns (e.g. ‘mesa’, ‘table’). The central nouns could be presented with congruent article flankers (‘la mesa la’), incongruent article flankers (‘el mesa el’) or no flankers. We found that responses were slower and less accurate in the incongruent condition. In Experiment 2, a lexical decision task, this effect was weaker than in Experiment 1. In Experiment 3, a semantic categorization task, we found no evidence of the article flanker effect. This suggests that articles and nouns are processed jointly, but the impact of this joint processing depends on the task.
+."
+# Put as many keywords at you like, separated by commmas (e.g., [reliability, validity, generalizability])
+keywords: [word recognition, flanker task, articles, nouns, word grouping hypothesis, multi-component unit hypothesis, parafoveal processing, grammatical gender]
+# If true, tables and figures are mingled with the text instead of listed at the end of the document.
+impact-statement: ~
+floatsintext: false
+# Numbered lines (.pdf and .docx only)
+numbered-lines: false
+# File with references
+bibliography: [references-manuscript.bib, r-references.bib]
+# Suppress title page
+suppress-title-page: false
+# Link citations to references
+link-citations: true
+# Masks references that appear in the masked-citations list
+mask: false
+masked-citations: ~
+# If true, adds today's date below author affiliations. If text, can be any value.
+# This is not standard APA format, but it is convenient.
+# Works with docx, html, and typst. 
+draft-date: false
+# Language options. See https://quarto.org/docs/authoring/language.html
+word-count: true
+lang: en
+language:
+  citation-last-author-separator: "and"
+  citation-masked-author: "Masked Citation"
+  citation-masked-date: "n.d."
+  citation-masked-title: "Masked Title"
+  email: "Email"
+  title-block-author-note: "Author Note"
+  title-block-correspondence-note: "Correspondence concerning this article should be addressed to"
+  title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; [credit.niso.org](https://credit.niso.org)) as follows:"
+  title-impact-statement: "Impact Statement"
+  references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
+format:
+  apaquarto-docx: 
+    toc: false
+  apaquarto-html: 
+    toc: true
+  apaquarto-typst: 
+    keep-typ: true
+    list-of-figures: false
+    list-of-tables: false
+    toc: false
+    papersize: "us-letter"
+  apaquarto-pdf:
+    # Can be jou (journal), man (manuscript), stu (student), or doc (document)
+    documentmode: man
+    keep-tex: true
+---
+
+
+<!-- 
+To render this file, make sure Quarto is installed by running the following line in the R console:
+
+quarto add wjschne/apaquarto
+
+To install apaquarto, run the following code in the terminal (must be inside the manuscript directory):
+
+quarto add wjschne/apaquarto
+--> 
+
+```{r}
+#| label: setup
+#| include: false
+library(conflicted)
+library(tidyverse)
+library(dplyr)
+library(qs2)
+library(gt)
+library(flextable)
+library(ftExtra)
+library(knitr)
+library(kableExtra)
+library(here)
+library(simr)
+# we only use papaja here for the R package citation functions (r_refs and cite_r)
+library(papaja)
+conflicts_prefer(dplyr::filter, .quiet = TRUE)
+conflicts_prefer(dplyr::select, .quiet = TRUE)
+conflicts_prefer(flextable::separate_header, .quiet = TRUE)
+
+source("brms_effect_summary.R")
+#r_refs("r-references.bib")
+
+# do we still need these functions?
+
+# convenience function to format descriptive summary statistics as "mean (sd)"
+print_mean_sd <- function(datum, digits_mean = 0, digits_sd = 2){
+  str_glue("{mean(datum) %>% apa_num(digits = digits_mean)} ({(sd(datum)) %>% apa_num(digits = digits_sd)})")
+}
+
+# convenience function to format inferential summary statistics as "mean (se)"
+print_mean_se <- function(datum, digits_mean = 0, digits_se = 2){
+  str_glue("{mean(datum) %>% apa_num(digits = digits_mean)} ({(sd(datum)/sqrt(length(datum))) %>% apa_num(digits = digits_se)})")
+}
+
+# convenience function to format range summary statistics as "min -- max"
+print_range <- function(datum, digits_min = 2, digits_max = 2){
+  str_glue("({min(datum) %>% apa_num(digits = digits_min)} -- {max(datum) %>% apa_num(digits = digits_max)})")
+}
+
+print_mean_sd_range <- function(datum, digits_mean = 2, digits_sd = 2, digits_min = 0, digits_max = 0){
+  str_glue("{mean(datum) %>% apa_num(digits = digits_mean)} ({(sd(datum)) %>% apa_num(digits = digits_sd)}; {min(datum) %>% apa_num(digits = digits_min)} -- {max(datum) %>% apa_num(digits = digits_max)})")
+}
+```
+
+<!--# need to use underscore as the first character in the file names or quarto render will try to process them as separate documents -->
+
+{{< include _introduction.qmd >}}
+
+{{< include _experiment1.qmd >}}
+
+{{< include _experiment2.qmd >}}
+
+{{< include _experiment3.qmd >}}
+
+# General discussion
+
+{{< include _general_discussion.qmd >}}
+
+# Acknowledgments
+
+The authors wish to thank Sara Alicia Amador for her help with participant recruitment. 
+
+# Declaration of interest statement
+
+The authors report there are no competing interests to declare.
+
+# References
+
+<!-- References will auto-populate in the refs div below -->
+
+::: {#refs}
+:::
+
+<!-- 
+# Appendix
+
+{{< include _appendix.qmd >}}
+
+-->
