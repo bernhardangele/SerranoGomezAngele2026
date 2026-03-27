@@ -7,15 +7,15 @@ library(here) # Assuming 'here' is installed and project is set up
 # Set the base path correctly if needed, otherwise 'here' should work
 # data_path <- here("data") # Or the specific path to your 'data' folder
 
-exp1_all_csv_content <- fs::dir_ls(path = here("data", "gender_decision_flanker"), glob = "*.csv") %>%
+exp1_all_csv_content <- fs::dir_ls(path = here("data", "exp1_gender_decision_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_types = cols(
     .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
-exp2_all_csv_content <- fs::dir_ls(path = here("data", "lexical_decision_flanker"), glob = "*.csv") %>%
+exp2_all_csv_content <- fs::dir_ls(path = here("data", "exp2_lexical_decision_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_types = cols(
     .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
-exp3_all_csv_content <- fs::dir_ls(path = here("data", "semantic_categorization_flanker"), glob = "*.csv") %>%
+exp3_all_csv_content <- fs::dir_ls(path = here("data", "exp3_semantic_categorization_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_types = cols(
     .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
