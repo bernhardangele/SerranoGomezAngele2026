@@ -1,0 +1,32 @@
+{
+  "name": "SerranoGomezAngele2026",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "analysis",
+  "workspaceFolder": "/home/rstudio/project",
+
+  "forwardPorts": [8787],
+
+  "containerEnv": {
+    "CMDSTAN": "/opt/cmdstan/cmdstan-2.38.0"
+  },
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "r.rterm.linux": "/usr/local/bin/R",
+        "r.bracketedPaste": true,
+        "r.plot.view": "Two"
+      },
+      "extensions": [
+        "REditorSupport.r",
+        "tamasfe.even-better-toml",
+        "quarto.quarto"
+      ]
+    }
+  },
+
+  "remoteUser": "root",
+
+  "postStartCommand": "chmod -R 777 /workspaces && ln -sfn /workspaces /home/rstudio/project && /usr/lib/rstudio-server/bin/rserver --server-daemonize=1 --www-port=8787"
+}
+
