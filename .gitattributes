@@ -1,2 +1,13 @@
+# Keep your existing backend preference
 * annex.backend=MD5E
+
+# 1. Make standard Git the default for all files
+* annex.largefiles=nothing
+
+# 2. Route specific extensions to the annex
+*.qs annex.largefiles=anything
+*.qs2 annex.largefiles=anything
+
+# 3. Keep DataLad's default safety rule at the bottom 
+# (This ensures Git configs stay in Git, even if someone names a file .gitignore.qs)
 **/.git* annex.largefiles=nothing
