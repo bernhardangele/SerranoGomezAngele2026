@@ -14,7 +14,7 @@ library(qs2)
 # Load data
 
 # Read all PsychoJS trial data
-exp1_all_csv_content <- fs::dir_ls(path = here("data", "gender_decision_flanker"), glob = "*.csv") %>%
+exp1_all_csv_content <- fs::dir_ls(path = here("data", "exp1_gender_decision_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_type = cols(
     .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
@@ -44,7 +44,7 @@ low_acc_participants <- participant_list %>% filter(mean_correct < .8)
 
 # this is the participant who confirmed on Prolific that they were over 18 and then entered 12 as their age on the survey
 # they are also a low-accuracy participant, so excluded anyway
-exclude_for_inconsistent_information <- "6139443561ab411be290efc1"
+exclude_for_inconsistent_information <- "0d828a45ab54823a65f9fca4"
 
 exp1 <- exp1_all_participants %>% filter(!(PROLIFIC_PID %in% low_acc_participants$PROLIFIC_PID)) %>% 
   filter(!(PROLIFIC_PID %in% exclude_for_inconsistent_information))

@@ -52,7 +52,7 @@ low_acc_participants <- participant_list %>% filter(mean_correct < .8)
 
 # this is the participant who confirmed on Prolific that they were over 18 and then entered 12 as their age on the survey
 # they are also a low-accuracy participant, so excluded anyway
-exclude_for_inconsistent_information <- "6139443561ab411be290efc1"
+exclude_for_inconsistent_information <- "0d828a45ab54823a65f9fca4"
 
 exp1 <- exp1_all_participants %>% filter(!(PROLIFIC_PID %in% low_acc_participants$PROLIFIC_PID)) %>% 
   filter(!(PROLIFIC_PID %in% exclude_for_inconsistent_information))

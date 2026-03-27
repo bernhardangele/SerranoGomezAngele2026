@@ -21,7 +21,7 @@ In Experiment 2, our design had a total of 480 items (240 words and 240 pseudowo
 #| echo: false
 #| message: false
 
-exp2_all_csv_content <- fs::dir_ls(path = here("data", "lexical_decision_flanker"), glob = "*.csv") %>%
+exp2_all_csv_content <- fs::dir_ls(path = here("data", "exp2_lexical_decision_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_type = cols(
     .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 

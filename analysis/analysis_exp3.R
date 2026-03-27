@@ -14,7 +14,7 @@ library(qs2)
 # Load data
 
 # Read all PsychoJS trial data
-exp3_all_csv_content <- fs::dir_ls(path = here("data", "semantic_categorization_flanker"), glob = "*.csv") %>%
+exp3_all_csv_content <- fs::dir_ls(path = here("data", "exp3_semantic_categorization_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_type = cols(
     .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
