@@ -7,6 +7,8 @@ library(beanplot)
 library(xfun)
 library(ggrain)
 library(qs2)
+conflicted::conflicts_prefer(dplyr::select)
+conflicted::conflicts_prefer(dplyr::filter)
 
 # use "here" package to make all paths refer to the project root
 
@@ -162,7 +164,7 @@ blmm_acc_exp2 <-
     silent = 0
   )
 
-qs_save(blmm_exp2_acc, file = here("analysis", "blmm_exp2_acc.qs"))
+qs_save(blmm_acc_exp2, file = here("analysis", "blmm_exp2_acc.qs"))
 
 blmm_exp2_acc_nonword <-
   brm(
