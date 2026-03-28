@@ -8,7 +8,9 @@ library(beanplot)
 library(xfun)
 library(ggrain)
 library(qs2)
-
+library(conflicted)
+conflicted::conflicts_prefer(dplyr::select)
+conflicted::conflicts_prefer(dplyr::filter)
 # use "here" package to make all paths refer to the project root
 
 # Load data
