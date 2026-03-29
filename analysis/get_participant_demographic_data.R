@@ -1,11 +1,8 @@
-# --- Your existing code ---
 library(tidyverse)
 library(here) # Assuming 'here' is installed and project is set up
-# library(stringr) # Part of tidyverse, but good to be explicit if needed
-# library(purrr)   # Part of tidyverse, needed for map_chr
-
-# Set the base path correctly if needed, otherwise 'here' should work
-# data_path <- here("data") # Or the specific path to your 'data' folder
+library(conflicted)
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(dplyr::select)
 
 exp1_all_csv_content <- fs::dir_ls(path = here("data", "exp1_gender_decision_flanker"), glob = "*.csv") %>%
   map_dfr(read_csv, .id = "source", col_types = cols(
@@ -41,7 +38,7 @@ demographics_exp1 <- exp1_all_csv_content %>%
     !is.na(`consent_prescreening.block_1/age_years`),
     !is.na(`consent_prescreening.block_1/gender`),
     !is.na(`consent_prescreening.block_1/first_language`), # Also filter NA language if desired
-    as.numeric(`consent_prescreening.block_1/age_years`) < 18 # remove participant who stated their age was 12
+    as.numeric(`consent_prescreening.block_1/age_years`) > 18 # remove participant who stated their age was 12
   )
 
 # Extract unique participant demographics for Experiment 2
