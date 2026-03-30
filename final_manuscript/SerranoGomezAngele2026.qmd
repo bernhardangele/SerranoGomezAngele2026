@@ -86,20 +86,19 @@ author-note:
     # Example: This study was registered at X (Identifier Y).
     study-registration: ~
     # Acknowledge and cite data/materials to be shared.
-    data-sharing: ~
+    data-sharing:  Data, experiment scripts, stimuli, and fully reproducible analysis code for all three experiments as well as the Quarto code for this manuscript can be found at <https://github.com/bernhardangele/SerranoGomezAngele2026>.
     # Example: This article is based on data published in [Reference].
     # Example: This article is based on the dissertation completed by [citation].  
     related-report: ~
     # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
     conflict-of-interest: The authors have no conflicts of interest to disclose.
     # Example: This study was supported by Grant [Grant Number] from [Funding Source].
-    financial-support: This research has been supported by NSF Grant SMA-2127135 to PG, Grant 2022-T1/SOC-23980 from the Community of Madrid and, Grant PID2024-161331NB-I00 from the Spanish Ministry of Science and Innovation to BA. MSC was supported by Grant 2022-T1/SOC-23980.
+    financial-support: This research has been supported by NSF Grant SMA-2127135 to PG, Grant 2022-T1/SOC-23980 from the Community of Madrid and Grant PID2024-161331NB-I00 from the Spanish Ministry of Science and Innovation to BA. MSC was supported by Grant 2022-T1/SOC-23980.
     # Example: The authors are grateful to [Person] for [Reason].
     gratitude: ~
     # Example. Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
     authorship-agreements: ~
-abstract: "We report three experiments using a novel variation of the word flanker paradigm (Dare & Shillcock, 2013) to test whether readers process articles and nouns together, taking advantage of the fact that, in Spanish, there must be gender agreement between articles and nouns. In Experiment 1, we asked Spanish native speakers to make grammatical gender judgments about centrally presented Spanish nouns (e.g. ‘mesa’, ‘table’). The central nouns could be presented with congruent article flankers (‘la mesa la’), incongruent article flankers (‘el mesa el’) or no flankers. We found that responses were slower and less accurate in the incongruent condition. In Experiment 2, a lexical decision task, this effect was weaker than in Experiment 1. In Experiment 3, a semantic categorization task, we found no evidence of the article flanker effect. This suggests that articles and nouns are processed jointly, but the impact of this joint processing depends on the task.
-."
+abstract: "We report three experiments using a novel variation of the word flanker paradigm (Dare & Shillcock, 2013) to test whether readers process articles and nouns together, taking advantage of the fact that, in Spanish, there must be gender agreement (concordance) between articles and nouns. In Experiment 1, we asked Spanish native speakers to make grammatical gender judgments about centrally presented Spanish nouns (e.g. ‘mesa’, ‘table’). The central nouns could be presented with concordant article flankers (‘la mesa la’), discordant article flankers (‘el mesa el’) or no flankers. We found that responses were slower and less accurate in the discordant condition. In Experiment 2, a lexical decision task, this effect was weaker than in Experiment 1. In Experiment 3, a semantic categorization task, we found no evidence of the article flanker effect. This suggests that articles and nouns are processed jointly, but the impact of this joint processing depends on the task."
 # Put as many keywords at you like, separated by commmas (e.g., [reliability, validity, generalizability])
 keywords: [word recognition, flanker task, articles, nouns, word grouping hypothesis, multi-component unit hypothesis, parafoveal processing, grammatical gender]
 # If true, tables and figures are mingled with the text instead of listed at the end of the document.
@@ -139,12 +138,6 @@ format:
     toc: false
   apaquarto-html: 
     toc: true
-  apaquarto-typst: 
-    keep-typ: true
-    list-of-figures: false
-    list-of-tables: false
-    toc: false
-    papersize: "us-letter"
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man

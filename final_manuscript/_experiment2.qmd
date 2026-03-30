@@ -8,7 +8,7 @@ In Experiment 2, participants were shown target stimuli that could either be wor
 
 ## Method
 
-We report here how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the two experiments. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) --> The experiment was preregistered; the preregistration form can be found at <https://osf.io/wt2qg/?view_only=d39d63d23f674e2ab47e7d06f1c22b6d>. Data, experiment scripts, and stimuli can be found at <https://osf.io/nsu4p/?view_only=c5f86ce479cf4866b6c30523f375219c>.
+We report here how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the experiment. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) --> The experiment was preregistered; the preregistration form can be found at <https://osf.io/wt2qg>. Data, experiment scripts, stimuli, and fully reproducible analysis code can be found at <https://github.com/bernhardangele/SerranoGomezAngele2026>.
 
 ### Rationale for sample size and stopping rule
 

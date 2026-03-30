@@ -8,7 +8,7 @@ In Experiment 1, participants were shown target words flanked by articles that e
 
 ## Method 
 
-We report here how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the two experiments. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) --> The experiment was preregistered; the preregistration form can be found at <https://osf.io/5j9q2/?view_only=017755699aa1467b8de9f4a0584729bc>. Data, experiment scripts, and stimuli can be found at <https://osf.io/avbh5/?view_only=f5c00d9af2e144cc969c96fbd04452d2>. The experiment (as well as Experiments 2 and 3) was conducted in accordance with the ethical guidelines laid out in the Helsinki Declaration and was approved by the ethics boards of the California State University San Bernardino (IRB: IRB-FY2023-10) and Nebrija University (UNNE-2024-0012).
+We report here how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the experiment. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) --> The experiment was preregistered; the preregistration form can be found at <https://osf.io/5j9q2>. Data, experiment scripts, stimuli, and fully reproducible analysis code can be found at <https://github.com/bernhardangele/SerranoGomezAngele2026>. The experiment (as well as Experiments 2 and 3) was conducted in accordance with the ethical guidelines laid out in the Helsinki Declaration and was approved by the ethics boards of the California State University San Bernardino (IRB: IRB-FY2023-10) and Nebrija University (UNNE-2024-0012).
 
 ### Rationale for sample size
 
