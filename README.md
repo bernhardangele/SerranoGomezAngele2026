@@ -167,4 +167,6 @@ The Docker image (`bangele1/analysis-in-a-box-rocker:SerranoGomezAngele2026`) ha
 
 ## License
 
-See repository for license details.
+- The manuscript and accompanying text in this repository are licensed under a [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+- The datasets included in this repository are dedicated to the public domain under a [Creative Commons Public Domain Dedication (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/).
