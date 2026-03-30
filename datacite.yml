@@ -1,0 +1,77 @@
+# Metadata for DOI registration according to DataCite Metadata Schema 4.1.
+# For detailed schema description see https://doi.org/10.5438/0014
+
+## Required fields
+
+# The main researchers involved. Include digital identifier (e.g., ORCID)
+# if possible, including the prefix to indicate its type.
+authors:
+  -
+    firstname: "Marina"
+    lastname: "Serrano Carot"
+    affiliation: "Universidad Antonio de Nebrija"
+    id: "ORCID:0009-0001-9706-2413"
+  -
+    firstname: "Pablo"
+    lastname: "Gomez"
+    affiliation: "Skidmore College; California State University San Bernardino"
+    id: "ORCID:0000-0003-4180-1560"
+  -
+    firstname: "Bernhard"
+    lastname: "Angele"
+    affiliation: "Universidad Antonio de Nebrija"
+    id: "ORCID:0000-0001-8989-8555"
+
+# A title to describe the published resource.
+title: "Articles as flankers: The effect of grammatical gender depends on the task"
+
+# Additional information about the resource, e.g., a brief abstract.
+description: |
+  We report three experiments using a novel variation of the word flanker paradigm (Dare & Shillcock, 2013) to test whether readers process articles and nouns together, taking advantage of the fact that, in Spanish, there must be gender agreement between articles and nouns. In Experiment 1, we asked Spanish native speakers to make grammatical gender judgments about centrally presented Spanish nouns (e.g. ‘mesa’, ‘table’). The central nouns could be presented with congruent article flankers (‘la mesa la’), incongruent article flankers (‘el mesa el’) or no flankers. We found that responses were slower and less accurate in the incongruent condition. In Experiment 2, a lexical decision task, this effect was weaker than in Experiment 1. In Experiment 3, a semantic categorization task, we found no evidence of the article flanker effect. This suggests that articles and nouns are processed jointly, but the impact of this joint processing depends on the task.
+
+# Lit of keywords the resource should be associated with.
+# Give as many keywords as possible, to make the resource findable.
+keywords:
+  - word recognition
+  - flanker task
+  - articles
+  - nouns
+  - word grouping hypothesis
+  - multi-component unit hypothesis
+  - parafoveal processing
+  - grammatical gender
+
+# License information for this resource. Please provide the license name and/or a link to the license.
+# Please add also a corresponding LICENSE file to the repository.
+license:
+  name: "Creative Commons CC0 1.0 Public Domain Dedication"
+  url: "https://creativecommons.org/publicdomain/zero/1.0/"
+
+
+## Optional Fields
+
+# Funding information for this resource.
+# Separate funder name and grant number by comma.
+funding:
+  - "NSF, SMA-2127135"
+  - "Community of Madrid, 2022-T1/SOC-23980"
+  - "Spanish Ministry of Science and Innovation, PID2024-161331NB-I00"
+
+
+# Related publications. reftype might be: IsSupplementTo, IsDescribedBy, IsReferencedBy.
+# Please provide digital identifier (e.g., DOI) if possible.
+# Add a prefix to the ID, separated by a colon, to indicate the source.
+# Supported sources are: DOI, arXiv, PMID
+# In the citation field, please provide the full reference, including title, authors, journal etc.
+# references:
+#   -
+#     id: "doi:10.xxx/zzzz"
+#     reftype: "IsSupplementTo"
+#     citation: "Citation1"
+
+
+# Resource type. Default is Dataset, other possible values are Software, DataPaper, Image, Text.
+resourcetype: Dataset
+
+# Do not edit or remove the following line
+templateversion: 1.2
