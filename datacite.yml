@@ -44,8 +44,8 @@ keywords:
 # License information for this resource. Please provide the license name and/or a link to the license.
 # Please add also a corresponding LICENSE file to the repository.
 license:
-  name: "Creative Commons CC0 1.0 Public Domain Dedication"
-  url: "https://creativecommons.org/publicdomain/zero/1.0/"
+  name: "Creative Commons Attribution 4.0 International"
+  url: "https://creativecommons.org/licenses/by/4.0/"
 
 
 ## Optional Fields
