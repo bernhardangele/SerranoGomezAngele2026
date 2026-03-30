@@ -25,7 +25,7 @@ The GitHub repository contains the code and manuscript. The GIN repository addit
 
 1. Go to the repository on GitHub: <https://github.com/bernhardangele/SerranoGomezAngele2026>
 2. Click the green **Code** button, then select the **Codespaces** tab.
-3. Click **Create codespace on main**.
+3. Click the dropdown arrow next to **Create codespace on main**, select **Configure and create codespace**, and choose the **4-core machine**. *(Note: The 4-core machine provides the necessary 8+ GB of RAM required to render the manuscript without crashing).*
 4. Wait for the Codespace to build (this may take a few minutes the first time).
 5. Once ready, open a terminal in the Codespace (Terminal > New Terminal) and render the manuscript (see [Rendering the manuscript](#rendering-the-manuscript) below).
 
@@ -105,6 +105,8 @@ ls -la analysis/*.qs
 ## Rendering the manuscript
 
 The manuscript is written in **Quarto** using the [apaquarto](https://github.com/wjschne/apaquarto) extension for APA formatting.
+
+Note that loading the models requires a considerable amount of memory and machines with less than 16 GB of RAM may experience Out-Of-Memory (OOM) crashes which may manifest as an unspecified error during rendering. On GitHub Codespaces, we recommend that you select the 4-core machine type during setup to ensure there is sufficient memory to complete the rendering process.
 
 From the terminal, run:
 
