@@ -4,7 +4,7 @@ bibliography: [references-manuscript.bib, r-references.bib]
 
 # Experiment 2: Lexical decision task
 
-In Experiment 2, participants were shown target stimuli that could either be words or pseudowords and were flanked by articles either agreed (were concordant) or disagreed (were discordant) with the gender of the central word or the apparent grammatical gender of the matched pseudoword. Our predictions for the outcome of this experiment were as follows: (1) Compared to Experiment 1, the lexical decision task does not require participants to process the grammatical gender of the target explicitly, as it is irrelevant for the decision of whether the target stimulus is a word or not. However, if the flanker articles are processed obligatorily and at the same time as the central stimulus, the error signal from the mismatch between discordant article and noun may interfere with the decision of whether the target stimulus is a word, delaying the decision or even resulting in an incorrect rejection of a word stimulus. As the pseudowords were matched with the words to have the same apparent gender as the matched target word (e.g. *cosa* was matched with *poga* and *pelo* was matched with *meno*), every pseudoword had an apparent gender. A pseudoword presented with a "concordant" flanker may be harder to reject than a pseudoword presented with a flanker that does not agree with its apparent gender. (2) As in Experiment 1, we may observe a systematic difference between processing grammatically masculine and grammatically feminine words. If this is the case, we expected to observe this in reaction time or accuracy or both. (3) Finally, and again as in Experiment 1, if the grammatical gender of the target word influences how participants process the flankers, we expected that we would observe an interaction between target word gender and flanker effect.
+In Experiment 2, participants were shown target stimuli that could either be words or pseudowords and were flanked by articles that either agreed (were concordant) or disagreed (were discordant) with the gender of the central word or the apparent grammatical gender of the matched pseudoword. Our predictions for the outcome of this experiment were as follows: (1) Compared to Experiment 1, the lexical decision task does not require participants to process the grammatical gender of the target explicitly, as it is irrelevant for the decision of whether the target stimulus is a word or not. However, if the flanker articles are processed obligatorily and at the same time as the central stimulus, the error signal from the mismatch between discordant article and noun may interfere with the decision of whether the target stimulus is a word, delaying the decision or even resulting in an incorrect rejection of a word stimulus. As the pseudowords were matched with the words to have the same apparent gender as the matched target word (e.g., *cosa* was matched with *poga* and *pelo* was matched with *meno*), every pseudoword had an apparent gender. A pseudoword presented with a "concordant" flanker may be harder to reject than a pseudoword presented with a flanker that does not agree with its apparent gender. (2) As in Experiment 1, we may observe a systematic difference between processing grammatically masculine and grammatically feminine words. If this is the case, we expected to observe this in reaction time or accuracy or both. (3) Finally, and again as in Experiment 1, if the grammatical gender of the target word influences how participants process the flankers, we expected that we would observe an interaction between target word gender and flanker effect.
 
 ## Method
 
@@ -114,7 +114,7 @@ materials_exp2 <- readxl::read_xlsx(here("exp2_ldt_flanker", "trials_list0.xlsx"
 
 materials_exp2_words <- filter(materials_exp2, StimulusType == "WORD")
 
-# write word list for EsPal if necessaryß
+# write word list for EsPal if necessary
 # write.csv(materials_exp2_words$Prime , here("exp2_ldt_flanker", "exp2_words.txt"), row.names = FALSE, quote = FALSE)
 
 materials_exp2_freq <- read_delim(here("exp2_ldt_flanker", "espal_exp2_words.txt"), delim = "\t")
@@ -597,15 +597,15 @@ gt(blmm_exp2_acc_summary, rowname_col = "parameter") %>%
 #| echo: false
 #| message: false
 #| cache: true
-#| tbl-cap: "Coefficients and 95% credible intervals from a Bayesian generalized linear mixed model using the Bernoulli distribution to predict response accuracy for pseudowords in Experiment 2, with flanker condition, apparent pseudoword word grammatical gender, and their interaction as predictors. Coefficients for which the 95% credible interval does not include 0 are shown in bold."
+#| tbl-cap: "Coefficients and 95% credible intervals from a Bayesian generalized linear mixed model using the Bernoulli distribution to predict response accuracy for pseudowords in Experiment 2, with flanker condition, apparent pseudoword grammatical gender, and their interaction as predictors. Coefficients for which the 95% credible interval does not include 0 are shown in bold."
 #| after-caption-space: 0pt
 
 
 parameter_names <- c(
     "Intercept",
     "Concordant vs. Discordant Flanker",
-    "Apparent grammatical Gender (F vs. M)",
-    "Concordant vs. Discordant:Apparent grammatical Gender"
+    "Apparent Grammatical Gender (F vs. M)",
+    "Concordant vs. Discordant:Apparent Grammatical Gender"
     )
 
 blmm_exp2_acc_nonwords_summary <- cbind(parameter_names, summary(blmm_exp2_acc_nonwords)$fixed %>% select(-Rhat, -ends_with("_ESS"))) 
@@ -648,7 +648,7 @@ gt(blmm_exp2_acc_nonwords_summary, rowname_col = "parameter") %>%
 
 For word trials in Experiment 2, there was little evidence for a marginal effect of grammatical gender across flanker conditions in either response times ($\mu_{RT}$: `r exp2_eff_rt_mu_gender`; $\beta_{RT}$: `r exp2_eff_rt_beta_gender`) or accuracy (`r exp2_eff_acc_gender`).
 
-The same was true for response times in pseudoword trials ($\mu_{RT}$: `r exp2_eff_rt_mu_gender_nonword`; $\beta_{RT}$: `r exp2_eff_rt_beta_gender_nonword`). However, there was an effect of the apparent gender of the pseudoword on accuracy, with apparent feminine pseudowords being slightly harder to correctly reject than apparent masculine pseudowords over all (`r exp2_eff_acc_gender_nonword`).
+The same was true for response times in pseudoword trials ($\mu_{RT}$: `r exp2_eff_rt_mu_gender_nonword`; $\beta_{RT}$: `r exp2_eff_rt_beta_gender_nonword`). However, there was an effect of the apparent gender of the pseudoword on accuracy, with apparent feminine pseudowords being slightly harder to correctly reject than apparent masculine pseudowords overall (`r exp2_eff_acc_gender_nonword`).
 
 ### Interaction between flanker condition and grammatical gender
 
